@@ -1,0 +1,22 @@
+{
+    "name": "admin/mambership-manager-backend",
+    "description": "simple backend for a vue js project based on controllers and models",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "YounessHassoune",
+            "email": "yhassoune7@gmail.com"
+        }
+    ],
+    "scripts": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "."
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.3",
+        "firebase/php-jwt": "^5.4"
+    }
+}
