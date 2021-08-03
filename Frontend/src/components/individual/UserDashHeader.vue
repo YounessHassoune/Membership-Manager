@@ -144,7 +144,7 @@ export default {
     }
     .profile {
       margin: 0 20px 0 12px;
-      width: 18px;
+      width: 19px;
     }
   }
   .button {
