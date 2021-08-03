@@ -57,10 +57,10 @@ import router from "../router";
 import logo from "../assets/img/logo.png";
 import indiv from "../assets/img/indiv.svg";
 import buiss from "../assets/img/buiss.svg";
-import FirstIndivInfo from "../components/register/individual/FirstIndivInfo.vue";
-import SecondIndivInfo from "../components/register/individual/SecondIndivInfo.vue";
-import FirstBuiInfo from "../components/register/business/FirstBuiInfo.vue";
-import SecondBuiInfo from "../components/register/business/SecondBuiInfo.vue";
+import FirstIndivInfo from "../components/individual/FirstIndivInfo.vue";
+import SecondIndivInfo from "../components/individual/SecondIndivInfo.vue";
+import FirstBuiInfo from "../components/business/FirstBuiInfo.vue";
+import SecondBuiInfo from "../components/business/SecondBuiInfo.vue";
 export default {
   components: { FirstIndivInfo, SecondIndivInfo, FirstBuiInfo, SecondBuiInfo },
   data() {
