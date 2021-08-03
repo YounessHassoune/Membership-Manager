@@ -38,8 +38,10 @@ class UserModel
         }
     }
     //=========update user profile ======================
-    public function update($fields, $id, $image)
+    public static function update($fields, $id, $image)
     {
+        $fields->password = PASSWORD_HASH($fields->password, PASSWORD_DEFAULT);
         $query = Database::query("UPDATE  `users` SET `user_firstname`='$fields->firstname',`user_lastname`='$fields->lastname',`user_cin`='$fields->cin',`user_birth`='$fields->birth',`user_phone`='$fields->phone',`user_email`='$fields->email',`user_password`='$fields->password',`user_image`='$image' WHERE `user_ID`= '$id' ")->execute();
+        return  $query;
     }
 }

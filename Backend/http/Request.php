@@ -69,4 +69,27 @@ class Request
         }
         return  $name;
     }
+
+    public static function isArrayMatching($requestarray, $definearray): bool
+    {
+        return array_diff($requestarray, $definearray) == array_diff($definearray, $requestarray);
+    }
+    public static function ValueValidate($request)
+    {
+
+        $sanitizedValues = [];
+        foreach ($request as $key => $value) {
+            if (trim($value) !== "") {
+                $sanitizedValues[$key] = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
+            } else {
+                return false;
+            }
+        }
+        return $sanitizedValues;
+    }
+    public static function validate($request, $fields): bool
+    {
+        $convertedJson = (array)$request;
+        return self::isArrayMatching(array_keys($convertedJson), $fields);
+    }
 }
