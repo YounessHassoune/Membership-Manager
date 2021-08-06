@@ -18,7 +18,7 @@ class User
             $fields = $data->request;
             $id = UserModel::register($fields, $imagename);
             if ($id) {
-                $user = (object)["id" => $id, "email" => $fields->email, "password" => $fields->password, "image" => $imagename];
+                $user = (object)["id" => $id];
                 $token = Auth::authorization($user);
                 $response->json(array(
                     "token" => $token
