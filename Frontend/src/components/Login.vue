@@ -20,7 +20,7 @@
           placeholder="Type your password"
         />
       </div>
-
+      
       <button>Log in</button>
     </div>
   </div>
@@ -29,6 +29,11 @@
 <script>
 export default {
   name: "Login",
+  data() {
+    return {
+      value: "",
+    };
+  },
 };
 </script>
 

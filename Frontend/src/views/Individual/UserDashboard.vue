@@ -2,7 +2,8 @@
   <div class="container">
     <UserDashSidebar />
     <div class="main_container">
-      <AccountProfile />
+      <AccountProfile v-if="activetab == 'profile'" />
+      <MyPlans v-if="activetab == 'myplans'" />
     </div>
   </div>
 </template>
@@ -11,9 +12,20 @@
 import UserDashSidebar from "../../components/individual/UserDashSidebar.vue";
 import UserDashHeader from "../../components/individual/UserDashHeader.vue";
 import AccountProfile from "../../components/individual/AccountProfile.vue";
-
+import MyPlans from "../../components/individual/MyPlans.vue";
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapActions } = createNamespacedHelpers("individual");
 export default {
-  components: { UserDashSidebar, UserDashHeader, AccountProfile },
+  components: { UserDashSidebar, UserDashHeader, AccountProfile, MyPlans },
+
+  data() {
+    return {};
+  },
+  computed: {
+    ...mapState({
+      activetab: ({ activetab }) => activetab,
+    }),
+  },
 };
 </script>
 
@@ -29,6 +41,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     padding: 25px;
     overflow: auto;
     padding-left: 0;

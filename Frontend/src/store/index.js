@@ -4,17 +4,25 @@ export default createStore({
   modules: {
     //=======individuel module==========
     individual: {
+      namespaced: true,
       state: {
-      },
-      mutations: {
+        activetab: "profile",
       },
       actions: {
+        changeActivetab({ commit }, data) {
+          commit("activateTab", data);
+        }
       },
-
+      mutations: {
+        activateTab(state, payload) {
+          state.activetab = payload;
+        }
+      },
 
     },
     //=======buissnes module=============
     Buissnes: {
+      namespaced: true,
       state: {
       },
       mutations: {
