@@ -1,6 +1,6 @@
 node_modules
-vendor
-/public/storage
+./Backend/vendor
+./Backend/public/storage
 /storage/*.key
 /dist
 
