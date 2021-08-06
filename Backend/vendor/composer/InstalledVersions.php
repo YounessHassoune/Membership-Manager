@@ -25,24 +25,24 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => '44c589ff995803b136259f84b2395a8262e0baa9',
     'name' => 'admin/mambership-manager-backend',
   ),
   'versions' => 
   array (
     'admin/mambership-manager-backend' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => '44c589ff995803b136259f84b2395a8262e0baa9',
     ),
     'firebase/php-jwt' => 
     array (
