@@ -5,7 +5,8 @@
       <div class="input-group">
         <label for="email">E-mail</label>
         <input
-          type="text"
+          v-model.trim="email"
+          type="email"
           id="email"
           name="email"
           placeholder="example@gmail.com"
@@ -18,10 +19,34 @@
           id="password"
           name="password"
           placeholder="Type your password"
+          v-model.trim="password"
         />
       </div>
-      
-      <button>Log in</button>
+      <div class="radio-btns">
+        <div>
+          <input
+            type="radio"
+            name="profile"
+            value="Business"
+            class="radio-expand"
+            id="Business"
+            v-model="choice"
+          />
+          <label for="Business">Business</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            name="profile"
+            value="Individual"
+            class="radio-expand"
+            id="Individual"
+            v-model="choice"
+          />
+          <label for="Individual">Individual</label>
+        </div>
+      </div>
+      <button @click="login">Log in</button>
     </div>
   </div>
 </template>
@@ -31,8 +56,38 @@ export default {
   name: "Login",
   data() {
     return {
-      value: "",
+      email: "",
+      password: "",
+      choice: "",
     };
+  },
+  methods: {
+    async login() {
+      if (this.choice == "" || this.email == "" || this.password == "") {
+        console.log("empty inputs");
+      } else {
+        if (this.choice == "Individual") {
+          let login_info = {
+            email: this.email,
+            password: this.password,
+          };
+          let result = await fetch(
+            "http://localhost/Membership-Manager/Backend/user/login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(login_info),
+            }
+          );
+          let data = await result.json();
+          console.log(data);
+        } else if (this.choice == "Business") {
+          console.log("b request");
+        }
+      }
+    },
   },
 };
 </script>
@@ -41,6 +96,7 @@ export default {
 @import "../assets/scss/_variabales.scss";
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i");
+
 .login-container {
   width: 100%;
   height: 100%;
@@ -91,6 +147,11 @@ export default {
       height: 60px;
       cursor: pointer;
     }
+  }
+  .radio-btns {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
   }
 }
 </style>
