@@ -19,7 +19,7 @@ class Request
     public static function getJson()
     {
         if ($_SERVER['REQUEST_METHOD'] !== "POST" || $_SERVER["CONTENT_TYPE"] !== "application/json") {
-            return null;
+            return  Response::json(null);
         }
         $data =   json_decode(file_get_contents("php://input"));
         return json_last_error() === JSON_ERROR_NONE ? $data : [];

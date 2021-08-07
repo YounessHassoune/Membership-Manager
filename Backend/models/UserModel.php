@@ -26,7 +26,8 @@ class UserModel
     //=========login individual user ======================
     public static function login($fields)
     {
-        $row = Database::query("SELECT * FROM `users` WHERE `user_email`= '$fields->email' ")->getSingleResult();
+
+        $row = Database::query("SELECT * FROM `users` WHERE `user_email` = '$fields->email' ")->getSingleResult();
         if ($row) {
             if (password_verify($fields->password, $row->user_password)) {
                 return  $row;
