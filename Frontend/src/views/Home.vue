@@ -13,7 +13,7 @@
           <img :src="todolist" alt="" srcset="" />
         </div>
       </div>
-      <div class="right-sub-container">
+      <div class="right-sub-container" v-if="logged == false">
         <Login />
       </div>
     </div>
@@ -24,12 +24,18 @@
 import Navbar from "../components/Navbar.vue";
 import Login from "../components/Login.vue";
 import todolist from "../assets/img/todolist.svg";
+import { mapState, mapActions, mapGetters } from "vuex";
 export default {
   components: { Navbar, Login },
   data() {
     return {
       todolist,
     };
+  },
+  computed: {
+    ...mapState({
+      logged: (state) => state.individual.logged,
+    }),
   },
 };
 </script>

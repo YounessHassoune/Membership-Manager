@@ -2,7 +2,9 @@
   <div class="account-profile">
     <div class="wall-img">
       <div class="wall-overlay">
-        <h1>Hello Youness Hssoune</h1>
+        <h1>
+          Hello {{ indivInfo.user_firstname + " " + indivInfo.user_lastname }}
+        </h1>
       </div>
     </div>
     <div class="account-info">
@@ -91,13 +93,20 @@
       </div>
       <div class="card-section">
         <div class="profile-img">
-          <img src="../../assets/img/user.jpg" alt="" />
+          <img
+            :src="
+              'http://localhost/Membership-Manager/Backend/public/storage/images/' +
+              indivInfo.user_image
+            "
+          />
         </div>
         <div class="profile-info">
-          <p class="name">Youness hassoune <span class="age">,27</span></p>
-          <p class="adresse">OD53333</p>
+          <p class="name">
+            {{ indivInfo.user_firstname + " " + indivInfo.user_lastname }}
+          </p>
+          <p class="adresse">{{ indivInfo.user_birth }}</p>
           <p class="adresse">
-            Lorem, ipsum dolor sit amet consectetur consectetur adipisicing.
+            {{ indivInfo.user_email }}
           </p>
         </div>
       </div>
@@ -106,7 +115,23 @@
 </template>
 
 <script>
-export default {};
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapActions } = createNamespacedHelpers("individual");
+
+export default {
+  data() {
+    return {
+      image: "hello",
+    };
+  },
+  computed: {
+    ...mapState({
+      logged: ({ logged }) => logged,
+      indivInfo: ({ indivInfo }) => indivInfo,
+    }),
+  },
+  method: {},
+}
 </script>
 
 <style scoped lang="scss">
@@ -281,6 +306,7 @@ export default {};
         overflow: hidden;
         img {
           width: 100%;
+          object-fit: cover;
         }
       }
       .profile-info {

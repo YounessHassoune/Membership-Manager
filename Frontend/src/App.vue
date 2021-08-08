@@ -2,6 +2,19 @@
   <router-view />
 </template>
 
+<script>
+export default {
+  data() {
+    return {};
+  },
+  created() {
+    this.$store.dispatch("individual/getUserInfo");
+    this.$store.dispatch("Buissnes/getcompanyinfo");
+  },
+};
+</script>
+
+
 <style lang="scss">
 * {
   padding: 0;

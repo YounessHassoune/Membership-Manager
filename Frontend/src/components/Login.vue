@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
+import router from "../router";
 export default {
   name: "Login",
   data() {
@@ -62,6 +64,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions([
+      "individual/changeloginstatus",
+      "individual/updateIndivInfo",
+    ]),
     async login() {
       if (this.choice == "" || this.email == "" || this.password == "") {
         console.log("empty inputs");
@@ -81,10 +87,41 @@ export default {
               body: JSON.stringify(login_info),
             }
           );
-          let data = await result.json();
-          console.log(data);
+          let response = await result.json();
+          console.log(response);
+          if (response.token) {
+            localStorage.setItem("indiv_token", response.token);
+            this.$store.dispatch("individual/changeloginstatus", true);
+            this.$store.dispatch("individual/updateIndivInfo", response.user);
+            router.push("UserDashboard");
+          } else {
+            this.$swal("", "login info is incorect!", "error");
+          }
         } else if (this.choice == "Business") {
-          console.log("b request");
+          let login_info = {
+            email: this.email,
+            password: this.password,
+          };
+          let result = await fetch(
+            "http://localhost/Membership-Manager/Backend/company/login",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(login_info),
+            }
+          );
+          let response = await result.json();
+          console.log(response);
+          if (response.token) {
+            localStorage.setItem("buiss_token", response.token);
+            this.$store.dispatch("Buissnes/changeloginstatus", true);
+            this.$store.dispatch("Buissnes/updateComInfo", response.user);
+            router.push("BuisnessDashboard");
+          } else {
+            this.$swal("", "login info is incorect!", "error");
+          }
         }
       }
     },
