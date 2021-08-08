@@ -17,7 +17,7 @@ class Auth
             "aud" => "localhost",
             "iat" => $iat,
             'exp' => $exp,
-            'user' => $user
+            'id' => $user
         );
         $jwt = JWT::encode($payload, $_ENV["KEY"], 'HS512');
         return $jwt;

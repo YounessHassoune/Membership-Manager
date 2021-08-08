@@ -38,10 +38,10 @@ class User
         $fields = $request->getJson();
         $row = UserModel::login($fields);
         if ($row) {
-            $token = Auth::authorization($row);
+            $token = Auth::authorization($row->user_id);
             $response->json(array(
                 "token" => $token,
-                "user" => $row
+                "user" => $row,
             ));
         } else {
             $response->json(array(
@@ -93,20 +93,27 @@ class User
             $response->json("unauthorized");
         }
     }
-
-    public static function test($request, $response)
-
+    //=========user profile info ======================
+    public static function info($request, $response)
     {
-        $fields = $request->getJson();
-        if ($request->validate($fields, ["firstname", "lastname", "cin", "birth", "phone", "email", "password"])) {
-            $sanitized = $request->ValueValidate($fields);
-            if ($sanitized) {
-                $response->json($sanitized);
-            } else {
-                $response->json("empty values");
+        if (Auth::gettoken()) {
+            try {
+                $id = Auth::verification(Auth::gettoken());
+                $user = UserModel::info($id->id);
+                if ($user) {
+                    $response->json(
+                        $user
+                    );
+                } else {
+                    $response->json(array(
+                        "error" => "can't get user information"
+                    ));
+                }
+            } catch (\Throwable $th) {
+                $response->json("unauthorizedtoken");
             }
         } else {
-            $response->json("non validate");
+            $response->json("unauthorized");
         }
     }
 }

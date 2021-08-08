@@ -67,7 +67,8 @@ class Request
         } else {
             return array("message" => "Sorry, only JPG, JPEG files are allowed", "status" => false);
         }
-        return  $name;
+
+        return  $name = $name . '.' . $fileExt;
     }
 
     public static function isArrayMatching($requestarray, $definearray): bool

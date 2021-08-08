@@ -45,4 +45,14 @@ class UserModel
         $query = Database::query("UPDATE  `users` SET `user_firstname`='$fields->firstname',`user_lastname`='$fields->lastname',`user_cin`='$fields->cin',`user_birth`='$fields->birth',`user_phone`='$fields->phone',`user_email`='$fields->email',`user_password`='$fields->password',`user_image`='$image' WHERE `user_ID`= '$id' ")->execute();
         return  $query;
     }
+    //=========user profile info ======================
+    public static function info($id)
+    {
+        $row = Database::query("SELECT * FROM `users` WHERE `user_id` = $id ")->getSingleResult();
+        if ($row) {
+            return  $row;
+        } else {
+            return false;
+        }
+    }
 }

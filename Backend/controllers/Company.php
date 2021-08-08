@@ -45,4 +45,44 @@ class Company
             ));
         }
     }
+    //===========company login=====================
+    public static function login($request, $response)
+    {
+        $fields = $request->getJson();
+        $row = CompanyModel::login($fields);
+        if ($row) {
+            $token = Auth::authorization($row->company_id);
+            $response->json(array(
+                "token" => $token,
+                "user" => $row,
+            ));
+        } else {
+            $response->json(array(
+                "user" => $row
+            ));
+        }
+    }
+    //=========company profile info ======================
+    public static function info($request, $response)
+    {
+        if (Auth::gettoken()) {
+            try {
+                $id = Auth::verification(Auth::gettoken());
+                $user = CompanyModel::info($id->id);
+                if ($user) {
+                    $response->json(
+                        $user
+                    );
+                } else {
+                    $response->json(array(
+                        "error" => "can't get user information"
+                    ));
+                }
+            } catch (\Throwable $th) {
+                $response->json("unauthorizedtoken");
+            }
+        } else {
+            $response->json("unauthorized");
+        }
+    }
 }
