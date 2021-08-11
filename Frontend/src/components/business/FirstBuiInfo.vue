@@ -4,6 +4,7 @@
       <div class="input-group">
         <label for="companyname">Company Name</label>
         <input
+          v-model.trim.lazy="compname"
           type="text"
           id="companyname"
           name="companyname"
@@ -12,23 +13,73 @@
       </div>
       <div class="input-group">
         <label for="about">About</label>
-        <textarea id="about" name="about" placeholder="About" />
+        <textarea
+          v-model.trim.lazy="about"
+          id="about"
+          name="about"
+          placeholder="About"
+        />
       </div>
       <div class="input-group">
         <label for="adres-bui">Address</label>
-        <input type="text" id="adress" name="adress" placeholder="Address" />
+        <input
+          v-model.trim.lazy="address"
+          type="text"
+          id="adress"
+          name="adress"
+          placeholder="Address"
+        />
       </div>
       <div class="input-group">
         <label for="city">City</label>
-        <input type="text" id="city" name="city" placeholder="city" />
+        <input
+          v-model.trim.lazy="city"
+          type="text"
+          id="city"
+          name="city"
+          placeholder="city"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "FirstBuiInfo",
+  data() {
+    return {
+      compname: "",
+      about: "",
+      address: "",
+      city: "",
+    };
+  },
+  watch: {
+    ...mapActions([
+      "Buissnes/updatename",
+      "Buissnes/updateabout",
+      "Buissnes/updateadress",
+      "Buissnes/updatecity",
+    ]),
+    compname(value) {
+      this.compname = value;
+      this.$store.dispatch("Buissnes/updatename", this.compname);
+    },
+    about(value) {
+      this.about = value;
+      this.$store.dispatch("Buissnes/updateabout", this.about);
+    },
+    address(value) {
+      this.address = value;
+      this.$store.dispatch("Buissnes/updateadress", this.address);
+    },
+    city(value) {
+      this.city = value;
+      this.$store.dispatch("Buissnes/updatecity", this.city);
+    },
+  },
 };
 </script>
 

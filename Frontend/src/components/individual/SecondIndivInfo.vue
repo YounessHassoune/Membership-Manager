@@ -3,11 +3,18 @@
     <div class="form-container">
       <div class="input-group">
         <label for="phone">Phone Number</label>
-        <input type="text" id="phone" name="phone" placeholder="Phone number" />
+        <input
+          v-model.trim.lazy="phone"
+          type="text"
+          id="phone"
+          name="phone"
+          placeholder="Phone number"
+        />
       </div>
       <div class="input-group">
         <label for="email">Email</label>
         <input
+          v-model.trim.lazy="email"
           type="email"
           id="email"
           name="email"
@@ -17,6 +24,7 @@
       <div class="input-group">
         <label for="password">Password</label>
         <input
+          v-model.trim.lazy="password"
           type="password"
           id="password"
           name="password"
@@ -40,20 +48,53 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "SecondIndivInfo",
   data() {
     return {
       FileImageName: "Profile Image",
+      phone: "",
+      email: "",
+      password: "",
+      image: "",
     };
+  },
+  computed: {
+    ...mapState({
+      registerinfo: (state) => state.individual.registerinfo,
+    }),
   },
   methods: {
     displaImageName(e) {
       if (e.target.files[0]) {
         this.FileImageName = e.target.files[0].name;
+        this.image = e.target.files[0];
+        this.$store.dispatch("individual/updateimage", this.image);
       } else {
         this.FileImageName = "Profile Image";
+        this.$store.dispatch("individual/updateimage", null);
       }
+    },
+  },
+  watch: {
+    ...mapActions([
+      "individual/updatemail",
+      "individual/updatephone",
+      "individual/updatepassword",
+      "individual/updateimage",
+    ]),
+    phone(value) {
+      this.phone = value;
+      this.$store.dispatch("individual/updatephone", this.phone);
+    },
+    email(value) {
+      this.email = value;
+      this.$store.dispatch("individual/updatemail", this.email);
+    },
+    password(value) {
+      this.password = value;
+      this.$store.dispatch("individual/updatepassword", this.password);
     },
   },
 };

@@ -2,7 +2,6 @@
   <div class="container">
     <UserDashSidebar />
     <div class="main_container">
-     
       <AccountProfile v-if="activetab == 'profile'" />
       <MyPlans v-if="activetab == 'myplans'" />
     </div>

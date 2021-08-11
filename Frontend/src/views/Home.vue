@@ -13,7 +13,10 @@
           <img :src="todolist" alt="" srcset="" />
         </div>
       </div>
-      <div class="right-sub-container" v-if="logged == false">
+      <div
+        class="right-sub-container"
+        v-if="logged_indiv == false && logged_bui == false"
+      >
         <Login />
       </div>
     </div>
@@ -34,7 +37,8 @@ export default {
   },
   computed: {
     ...mapState({
-      logged: (state) => state.individual.logged,
+      logged_indiv: (state) => state.individual.logged,
+      logged_bui: (state) => state.Buissnes.logged,
     }),
   },
 };

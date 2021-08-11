@@ -42,11 +42,24 @@
         <FirstIndivInfo v-if="profile == 1" />
         <SecondIndivInfo v-if="profile == 2" />
         <FirstBuiInfo v-if="profile == -1" />
-        <SecondBuiInfo o v-if="profile == -2" />
+        <SecondBuiInfo v-if="profile == -2" />
       </div>
       <div class="footer">
         <button @click="back" class="cancel-btn">Back</button>
-        <button @click="next" class="continue-btn">Continue</button>
+        <button
+          v-if="profile < 2 && profile > -2"
+          @click="next"
+          class="continue-btn"
+        >
+          Continue
+        </button>
+        <button
+          class="continue-btn"
+          v-if="profile == 2 || profile == -2"
+          @click="register"
+        >
+          register
+        </button>
       </div>
     </div>
   </div>
@@ -61,13 +74,27 @@ import FirstIndivInfo from "../components/individual/FirstIndivInfo.vue";
 import SecondIndivInfo from "../components/individual/SecondIndivInfo.vue";
 import FirstBuiInfo from "../components/business/FirstBuiInfo.vue";
 import SecondBuiInfo from "../components/business/SecondBuiInfo.vue";
+
+import { mapState, mapActions } from "vuex";
 export default {
   components: { FirstIndivInfo, SecondIndivInfo, FirstBuiInfo, SecondBuiInfo },
   data() {
     return { logo, indiv, buiss, profile: 0, choice: "", info: {} };
   },
+  computed: {
+    ...mapState({
+      registerinfo_ind: (state) => state.individual.registerinfo,
+      registerinfo_bui: (state) => state.Buissnes.registerinfo,
+    }),
+  },
 
   methods: {
+    ...mapActions([
+      "individual/changeloginstatus",
+      "individual/updateIndivInfo",
+      "Buissnes/updateComInfo",
+      "Buissnes/changeloginstatus",
+    ]),
     next() {
       if (this.profile < 2 && this.profile > -2) {
         if (this.choice != "" && this.choice == "Individual") {
@@ -87,7 +114,69 @@ export default {
         this.profile += 1;
       }
     },
-    register_info(info) {},
+    async register() {
+      //Individual request ========================>
+      if (this.choice == "Individual") {
+        for (const p in this.registerinfo_ind) {
+          if (this.registerinfo_ind[p] == "") {
+            this.$swal("", "empty fields!", "error");
+            return;
+          }
+        }
+        let formdata = new FormData();
+        formdata.append("image", this.registerinfo_ind.image);
+        delete this.registerinfo_ind.image;
+        let info = JSON.stringify(this.registerinfo_ind);
+        formdata.append("request", info);
+        let result = await fetch(
+          "http://localhost/Membership-Manager/Backend/user/register",
+          {
+            method: "POST",
+            body: formdata,
+          }
+        );
+        let response = await result.json();
+        console.log(response);
+        if (response.token) {
+          localStorage.setItem("indiv_token", response.token);
+          this.$store.dispatch("individual/changeloginstatus", true);
+          this.$store.dispatch("individual/updateIndivInfo", response.user);
+          router.push("UserDashboard");
+        } else {
+          this.$swal("", "cant create your accout!", "error");
+        }
+        //Buisness request ========================>
+      } else if (this.choice == "Business") {
+        for (const p in this.registerinfo_bui) {
+          if (this.registerinfo_bui[p] == "") {
+            this.$swal("", "empty fields!", "error");
+            return;
+          }
+        }
+        let formdata = new FormData();
+        formdata.append("image", this.registerinfo_bui.image);
+        delete this.registerinfo_bui.image;
+        let info = JSON.stringify(this.registerinfo_bui);
+        formdata.append("request", info);
+        let result = await fetch(
+          "http://localhost/Membership-Manager/Backend/company/register",
+          {
+            method: "POST",
+            body: formdata,
+          }
+        );
+        let response = await result.json();
+        console.log(response);
+        if (response.token) {
+          localStorage.setItem("buiss_token", response.token);
+          this.$store.dispatch("Buissnes/changeloginstatus", true);
+          this.$store.dispatch("Buissnes/updateComInfo", response.user);
+          router.push("BuisnessDashboard");
+        } else {
+          this.$swal("", "cant create your accout!!", "error");
+        }
+      }
+    },
   },
 };
 </script>

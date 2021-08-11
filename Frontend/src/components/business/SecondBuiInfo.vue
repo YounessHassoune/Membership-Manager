@@ -3,11 +3,18 @@
     <div class="form-container">
       <div class="input-group">
         <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone" placeholder="phone" />
+        <input
+          v-model.trim.lazy="phone"
+          type="text"
+          id="phone"
+          name="phone"
+          placeholder="phone"
+        />
       </div>
       <div class="input-group">
         <label for="email">Email</label>
         <input
+          v-model.trim.lazy="email"
           type="email"
           id="email"
           name="email"
@@ -17,6 +24,7 @@
       <div class="input-group">
         <label for="password">Password</label>
         <input
+          v-model.trim.lazy="password"
           type="password"
           id="password"
           name="password"
@@ -40,20 +48,48 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "SecondBuiInfo",
   data() {
     return {
       FileImageName: "Profile Image",
+      phone: "",
+      email: "",
+      password: "",
+      image: "",
     };
   },
   methods: {
     displaImageName(e) {
       if (e.target.files[0]) {
         this.FileImageName = e.target.files[0].name;
+        this.image = e.target.files[0];
+        this.$store.dispatch("Buissnes/updateimage", this.image);
       } else {
         this.FileImageName = "Profile Image";
+        this.$store.dispatch("Buissnes/updateimage", null);
       }
+    },
+  },
+  watch: {
+    ...mapActions([
+      "Buissnes/updatephone",
+      "Buissnes/updatemail",
+      "Buissnes/updatepassword",
+      "Buissnes/updateimage",
+    ]),
+    phone(value) {
+      this.phone = value;
+      this.$store.dispatch("Buissnes/updatephone", this.phone);
+    },
+    email(value) {
+      this.email = value;
+      this.$store.dispatch("Buissnes/updatemail", this.email);
+    },
+    password(value) {
+      this.password = value;
+      this.$store.dispatch("Buissnes/updatepassword", this.password);
     },
   },
 };

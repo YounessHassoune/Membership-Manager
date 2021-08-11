@@ -13,8 +13,16 @@
         <li><a href="#">Contact</a></li>
       </div>
       <div class="nav-3">
-        <button v-if="logged == false">Log in</button>
-        <button v-if="logged == false" @click="register" class="active">Register</button>
+        <button v-if="logged_indiv == false && logged_bui == false">
+          Log in
+        </button>
+        <button
+          v-if="logged_indiv == false && logged_bui == false"
+          @click="register"
+          class="active"
+        >
+          Register
+        </button>
       </div>
     </ul>
   </nav>
@@ -37,7 +45,8 @@ export default {
   },
   computed: {
     ...mapState({
-      logged: (state) => state.individual.logged,
+      logged_indiv: (state) => state.individual.logged,
+      logged_bui: (state) => state.Buissnes.logged,
     }),
   },
 };

@@ -4,6 +4,7 @@
       <div class="input-group">
         <label for="firstname">First Name</label>
         <input
+          v-model.trim.lazy="firstname"
           type="text"
           id="firstname"
           name="firstname"
@@ -13,6 +14,7 @@
       <div class="input-group">
         <label for="lastname">Last Name</label>
         <input
+          v-model.trim.lazy="lastname"
           type="text"
           id="lastname"
           name="lastname"
@@ -21,19 +23,58 @@
       </div>
       <div class="input-group">
         <label for="cin">ID</label>
-        <input type="text" id="cin" name="cin" placeholder="National ID card" />
+        <input
+          v-model.trim.lazy="cin"
+          type="text"
+          id="cin"
+          name="cin"
+          placeholder="National ID card"
+        />
       </div>
       <div class="input-group">
         <label for="birth">Date of Birth</label>
-        <input type="date" id="birth" name="birth" />
+        <input v-model.trim="birth" type="date" id="birth" name="birth" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from "vuex";
 export default {
   name: "FirstIndivInfo",
+  data() {
+    return {
+      firstname: "",
+      lastname: "",
+      cin: "",
+      birth: "",
+    };
+  },
+  watch: {
+    ...mapActions([
+      "individual/updatefirstname",
+      "individual/updatelastname",
+      "individual/updatecin",
+      "individual/updatebirth",
+    ]),
+    firstname(value) {
+      this.firstname = value;
+      this.$store.dispatch("individual/updatefirstname", this.firstname);
+    },
+    lastname(value) {
+      this.lastname = value;
+      this.$store.dispatch("individual/updatelastname", this.lastname);
+    },
+    cin(value) {
+      this.cin = value;
+      this.$store.dispatch("individual/updatecin", this.cin);
+    },
+    birth(value) {
+      this.birth = value;
+      this.$store.dispatch("individual/updatebirth", this.birth);
+    },
+  },
 };
 </script>
 

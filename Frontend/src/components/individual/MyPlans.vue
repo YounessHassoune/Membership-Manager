@@ -1,29 +1,27 @@
  <template>
   <div class="plans-container">
     <div class="projects-section">
-      <div class="projects-section-header">
-        <p>Plans</p>
-        <p class="time">{{ new Date().toISOString().slice(0, 10) }}</p>
-      </div>
-      <div class="projects-section-line">
-        <div class="projects-status">
-          <div class="item-status">
-            <span class="status-number">45</span>
-            <span class="status-type">In Progress</span>
-          </div>
-          <div class="item-status">
-            <span class="status-number">24</span>
-            <span class="status-type">On hold</span>
-          </div>
-          <div class="item-status">
-            <span class="status-number">62</span>
-            <span class="status-type">Expired</span>
+      <div class="shadow">
+        <div class="projects-section-header">
+          <p>Plans</p>
+          <p class="time">{{ new Date().toISOString().slice(0, 10) }}</p>
+        </div>
+        <div class="projects-section-line">
+          <div class="projects-status">
+            <div class="item-status">
+              <span class="status-number">{{ progress }}</span>
+              <span class="status-type">In Progress</span>
+            </div>
+            <div class="item-status">
+              <span class="status-number">{{ expired }}</span>
+              <span class="status-type">Expired</span>
+            </div>
           </div>
         </div>
       </div>
       <div class="project-boxes jsGridView">
-        <div class="project-box-wrapper" v-for="i in 9" :key="i">
-          <div class="project-box" style="background-color: #ffd3e2">
+        <div class="project-box-wrapper">
+          <div class="project-box" style="background-color: #fff">
             <div class="project-box-header">
               <span>December 10, 2020</span>
               <div class="more-wrapper">
@@ -56,13 +54,13 @@
               <div class="box-progress-bar">
                 <span
                   class="box-progress"
-                  style="width: 60%; background-color: #ff942e"
+                  style="width: 60%; background-color: #9a6dd3"
                 ></span>
               </div>
               <p class="box-progress-percentage">60%</p>
             </div>
             <div class="project-box-footer">
-              <div class="days-left" style="color: #ff942e">2 Days Left</div>
+              <div class="days-left" style="color: #9a6dd3">2 Days Left</div>
             </div>
           </div>
         </div>
@@ -72,7 +70,38 @@
 </template>
  
  <script>
-export default {};
+export default {
+  data() {
+    return {
+      expired: "",
+      progress: "",
+    };
+  },
+  methods: {
+    async stats() {
+      if (localStorage.getItem("indiv_token")) {
+        let result = await fetch(
+          "http://localhost/Membership-Manager/Backend/plan/stats",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("indiv_token")}`,
+            },
+          }
+        );
+        let response = await result.json();
+        console.log(response);
+        if (response) {
+          this.expired = response.expired;
+          this.progress = response.progress;
+        }
+      }
+    },
+  },
+  created() {
+    this.stats();
+  },
+};
 </script>
  
 <style scoped lang="scss">
@@ -125,26 +154,6 @@ export default {};
     --more-list-bg-hover: rgba(195, 207, 244, 0.1);
     --more-list-shadow: rgba(195, 207, 244, 0.1);
     --message-btn: rgba(195, 207, 244, 0.1);
-  }
-
-  html,
-  body {
-    width: 100%;
-    height: 100vh;
-    margin: 0;
-  }
-
-  body {
-    font-family: "DM Sans", sans-serif;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    background-color: var(--app-container);
-  }
-
-  button,
-  a {
-    cursor: pointer;
   }
 
   .app {
@@ -365,7 +374,12 @@ export default {};
     height: 100%;
     display: flex;
     flex-direction: column;
-
+    .shadow {
+      margin-bottom: 20px;
+      box-shadow: 0 0 25px 0 rgb(0, 0, 0, 0.15);
+      padding: 20px;
+      border-radius: 8px;
+    }
     &-line {
       display: flex;
       justify-content: space-between;
@@ -681,9 +695,10 @@ export default {};
 
   .project-box {
     --main-color-card: #dbf6fd;
-    border-radius: 30px;
+    border-radius: 8px;
     padding: 16px;
     background-color: var(--main-color-card);
+    box-shadow: 0 0 25px 0 rgb(0, 0, 0, 0.15);
 
     &-header {
       display: flex;
