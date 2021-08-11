@@ -38,8 +38,8 @@ class Request
         }
         $request = self::getJsonFormData($_POST['request'] ?? '');
         return (object)[
-            "image" => $_FILES,
-            "request" => $request
+            "image" => $_FILES ?? null,
+            "request" =>  $request
         ];
     }
     public static function uplaodImages($imagefile)

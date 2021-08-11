@@ -4,7 +4,7 @@ namespace App\Api;
 
 use App\controllers\User;
 use App\controllers\Company;
-
+use App\controllers\Plan;
 use App\route\Route;
 //---------------Api Routing---------------
 
@@ -18,3 +18,7 @@ Route::get('user/info', [User::class, 'info']);
 Route::post('company/register', [Company::class, 'register']);
 Route::post('company/login', [Company::class, 'login']);
 Route::get('company/info', [Company::class, 'info']);
+//=============plans route===================================
+Route::post('plan/create', [Plan::class, 'create']);
+Route::post('plan/reserve', [Plan::class, 'reserve']);
+Route::get('plan/stats', [Plan::class, 'stats']);

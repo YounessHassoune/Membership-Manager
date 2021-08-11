@@ -13,23 +13,44 @@ class User
     public static function register($request,  $response)
     {
         $data = $request->getFormData();
-        $imagename = $request->uplaodImages($data->image['image']);
-        if (!is_array($imagename)) {
+        if ($data->image) {
+            $imagename = $request->uplaodImages($data->image['image']);
             $fields = $data->request;
-            $id = UserModel::register($fields, $imagename);
-            if ($id) {
-                $user = (object)["id" => $id];
-                $token = Auth::authorization($user);
-                $response->json(array(
-                    "token" => $token
-                ));
+            if ($request->validate($fields, ["firstname", "lastname", "cin", "birth", "phone", "email", "password"])) {
+                $sanitized = $request->ValueValidate($fields);
+                if ($sanitized) {
+                    if (!is_array($imagename)) {
+                        $fields = $data->request;
+                        $id = UserModel::register($fields, $imagename);
+                        if ($id) {
+                            $user = (object)["id" => $id, "user_firstname" => $fields->firstname, "user_lastname" => $fields->lastname, "user_cin" => $fields->cin, "user_birth" => $fields->birth, "user_phone" => $fields->phone, "user_email" => $fields->email, "user_image" => $imagename];
+                            $token = Auth::authorization($user->id);
+                            $response->json(array(
+                                "token" => $token,
+                                "user" => $user
+                            ));
+                        } else {
+                            $response->json(array(
+                                "error" => "can't create this account"
+                            ));
+                        }
+                    } else {
+                        $response->json($imagename);
+                    }
+                } else {
+                    $response->json(array(
+                        "error" => "can't create this account"
+                    ));
+                }
             } else {
                 $response->json(array(
-                    "error" => "can't create this account"
+                    "error" => "can't create this account "
                 ));
             }
         } else {
-            $response->json($imagename);
+            $response->json(array(
+                "error" => "can't create this account "
+            ));
         }
     }
     //=========login individual user ======================

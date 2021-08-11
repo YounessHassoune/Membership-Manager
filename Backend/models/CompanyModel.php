@@ -17,7 +17,7 @@ class CompanyModel
                 return false;
             } else {
                 $fields->password = PASSWORD_HASH($fields->password, PASSWORD_DEFAULT);
-                Database::query("INSERT INTO `business` (`company_name`,`about`,`adresse`,`city`,`phone`,`email`,`password`,`image`) VALUES ('$fields->name','$fields->about','$fields->adresse','$fields->city','$fields->phone','$fields->email','$fields->password','$image')")->execute();
+                Database::query("INSERT INTO `business` (`company_name`,`about`,`adresse`,`city`,`phone`,`email`,`password`,`image`) VALUES ('$fields->name','$fields->about','$fields->address','$fields->city','$fields->phone','$fields->email','$fields->password','$image')")->execute();
             }
         } catch (\Throwable $th) {
             return false;

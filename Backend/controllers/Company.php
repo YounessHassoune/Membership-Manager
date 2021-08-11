@@ -11,28 +11,34 @@ class Company
     public static function register($request, $response)
     {
         $data = $request->getFormData();
-        $imagename = $request->uplaodImages($data->image['image']);
-        $fields = $data->request;
-
-        if ($request->validate($fields, ["name", "about", "adresse", "city", "phone", "email", "password"])) {
-            $sanitized = $request->ValueValidate($fields);
-            if ($sanitized) {
-                if (!is_array($imagename)) {
-                    $fields = $data->request;
-                    $id = CompanyModel::register($fields, $imagename);
-                    if ($id) {
-                        $user = (object)["id" => $id];
-                        $token = Auth::authorization($user);
-                        $response->json(array(
-                            "token" => $token
-                        ));
+        if ($data->image) {
+            $imagename = $request->uplaodImages($data->image['image']);
+            $fields = $data->request;
+            if ($request->validate($fields, ["name", "about", "address", "city", "phone", "email", "password"])) {
+                $sanitized = $request->ValueValidate($fields);
+                if ($sanitized) {
+                    if (!is_array($imagename)) {
+                        $fields = $data->request;
+                        $id = CompanyModel::register($fields, $imagename);
+                        if ($id) {
+                            $user = (object)["id" => $id, "company_name" => $fields->name, "about" => $fields->about, "address" => $fields->address, "city" => $fields->city, "phone" => $fields->phone, "email" => $fields->email, "password" => $fields->password, "image" => $imagename];
+                            $token = Auth::authorization($user->id);
+                            $response->json(array(
+                                "token" => $token,
+                                "user" => $user
+                            ));
+                        } else {
+                            $response->json(array(
+                                "error" => "can't create this account"
+                            ));
+                        }
                     } else {
-                        $response->json(array(
-                            "error" => "can't create this account"
-                        ));
+                        $response->json($imagename);
                     }
                 } else {
-                    $response->json($imagename);
+                    $response->json(array(
+                        "error" => "can't create this account"
+                    ));
                 }
             } else {
                 $response->json(array(
