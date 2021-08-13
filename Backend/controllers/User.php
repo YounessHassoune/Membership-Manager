@@ -3,7 +3,7 @@
 namespace App\controllers;
 
 use App\http\Auth;
-
+use App\http\Response;
 use App\models\UserModel;
 
 class User
@@ -77,21 +77,26 @@ class User
             try {
                 $user = Auth::verification(Auth::gettoken());
                 $data = $request->getFormData();
-                $imagename = $request->uplaodImages($data->image['image']);
-                $fields = $data->request;
 
-                if ($request->validate($fields, ["firstname", "lastname", "cin", "birth", "phone", "email", "password"])) {
+                if ($data->image != []) {
+                    $imagename = $request->uplaodImages($data->image['image']);
+                } else {
+                    $imagename = null;
+                }
+
+                $fields = $data->request;
+                if ($request->validate($fields, ["firstname", "lastname", "cin", "birth", "phone", "email"])) {
                     $sanitized = $request->ValueValidate($fields);
                     if ($sanitized) {
                         if (!is_array($imagename)) {
-                            $updated = UserModel::update($fields, $user->user->user_id, $imagename);
+                            $updated = UserModel::update($fields, $user->id, $imagename);
                             if ($updated) {
                                 $response->json(array(
                                     "updated" => true
                                 ));
                             } else {
                                 $response->json(array(
-                                    "error" => "can't update user information"
+                                    "error" => "can't update user information "
                                 ));
                             }
                         } else {
@@ -104,7 +109,7 @@ class User
                     }
                 } else {
                     $response->json(array(
-                        "error" => "can't update user information"
+                        "error" => "can't update user information "
                     ));
                 }
             } catch (\Throwable $th) {

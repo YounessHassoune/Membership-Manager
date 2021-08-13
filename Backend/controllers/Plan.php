@@ -82,4 +82,22 @@ class Plan
             $response->json("unauthorized");
         }
     }
+    public static function myplans($request, $response)
+    {
+        if (Auth::gettoken()) {
+            try {
+                $id = Auth::verification(Auth::gettoken());
+                $row = PlanModel::myplans($id->id);
+                if ($row) {
+                    $response->json($row);
+                } else {
+                    $response->json("cant get Your plans");
+                }
+            } catch (\Throwable $th) {
+                $response->json("unauthorizedtoken");
+            }
+        } else {
+            $response->json("unauthorized");
+        }
+    }
 }

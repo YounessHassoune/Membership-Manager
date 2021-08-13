@@ -22,3 +22,4 @@ Route::get('company/info', [Company::class, 'info']);
 Route::post('plan/create', [Plan::class, 'create']);
 Route::post('plan/reserve', [Plan::class, 'reserve']);
 Route::get('plan/stats', [Plan::class, 'stats']);
+Route::get('plan/myplans', [Plan::class, 'myplans']);

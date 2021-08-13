@@ -35,4 +35,13 @@ class PlanModel
         }
         return $row;
     }
+    public static function myplans($id)
+    {
+        try {
+            $row = Database::query("SELECT p.plan_id,p.duration,p.title,s.created_at,p.description,p.price,cast((s.balance*100/p.balance) as int) progress,CASE WHEN TIMESTAMPDIFF(DAY,CURRENT_TIMESTAMP,(DATE_ADD(p.created_at, INTERVAL p.duration DAY)))<0 THEN 0 ELSE TIMESTAMPDIFF(DAY,CURRENT_TIMESTAMP,(DATE_ADD(p.created_at, INTERVAL p.duration DAY))) END AS daysleft ,s.plan_status FROM `subscriptions` s ,`plans` p WHERE s.plan_id=p.plan_id AND s.user_id=$id")->getResult();
+        } catch (\Throwable $th) {
+            return false;
+        }
+        return $row;
+    }
 }
