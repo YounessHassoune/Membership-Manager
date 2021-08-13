@@ -64,13 +64,14 @@ export default {
   },
 
   methods: {
-    ...mapActions(["changeActivetab"]),
+    ...mapActions(["changeActivetab", "changeloginstatus"]),
 
     change(data) {
       this.changeActivetab(data);
     },
     logout() {
       localStorage.clear();
+      this.changeloginstatus(false);
       router.push({ path: "/" });
     },
   },

@@ -4,6 +4,7 @@
     <div class="main_container">
       <AccountProfile v-if="activetab == 'profile'" />
       <MyPlans v-if="activetab == 'myplans'" />
+      <UserDashHeader v-if="activetab == 'getplans'" />
     </div>
   </div>
 </template>

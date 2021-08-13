@@ -20,10 +20,14 @@
         </div>
       </div>
       <div class="project-boxes jsGridView">
-        <div class="project-box-wrapper">
+        <div
+          class="project-box-wrapper"
+          v-for="plan in plans"
+          :key="plan.plan_id"
+        >
           <div class="project-box" style="background-color: #fff">
             <div class="project-box-header">
-              <span>December 10, 2020</span>
+              <span>{{ plan.created_at }}</span>
               <div class="more-wrapper">
                 <button class="project-btn-more">
                   <svg
@@ -46,21 +50,27 @@
               </div>
             </div>
             <div class="project-box-content-header">
-              <p class="box-content-header">Web Designing</p>
-              <p class="box-content-subheader">Prototyping</p>
+              <p class="box-content-header">{{ plan.title }}</p>
+              <p class="box-content-subheader">
+                {{ plan.description }}
+              </p>
             </div>
             <div class="box-progress-wrapper">
               <p class="box-progress-header">Progress</p>
               <div class="box-progress-bar">
                 <span
                   class="box-progress"
-                  style="width: 60%; background-color: #9a6dd3"
+                  :style="barstyle(plan.progress)"
                 ></span>
               </div>
-              <p class="box-progress-percentage">60%</p>
+              <p class="box-progress-percentage">{{ 100 - plan.progress }}%</p>
             </div>
             <div class="project-box-footer">
-              <div class="days-left" style="color: #9a6dd3">2 Days Left</div>
+              <div class="days-left" style="color: #9a6dd3">
+                {{
+                  plan.daysleft > 0 ? plan.daysleft + " Days Left" : "  Expired"
+                }}
+              </div>
             </div>
           </div>
         </div>
@@ -75,9 +85,19 @@ export default {
     return {
       expired: "",
       progress: "",
+      plans: [],
+      style: {
+        width: "",
+        backgroundColor: "rgb(154, 109, 211)",
+      },
     };
   },
   methods: {
+  
+    barstyle(value) {
+      this.style.width = 100 - value + "%";
+      return this.style;
+    },
     async stats() {
       if (localStorage.getItem("indiv_token")) {
         let result = await fetch(
@@ -97,9 +117,28 @@ export default {
         }
       }
     },
+    async myplans() {
+      if (localStorage.getItem("indiv_token")) {
+        let result = await fetch(
+          "http://localhost/Membership-Manager/Backend/plan/myplans",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("indiv_token")}`,
+            },
+          }
+        );
+        let response = await result.json();
+        console.log(response);
+        if (response) {
+          this.plans = response;
+        }
+      }
+    },
   },
   created() {
     this.stats();
+    this.myplans();
   },
 };
 </script>

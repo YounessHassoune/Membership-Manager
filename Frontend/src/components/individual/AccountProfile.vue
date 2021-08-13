@@ -17,63 +17,73 @@
             <div class="input-group">
               <label for="firstname">First Name</label>
               <input
+                :value="indivInfo.user_firstname"
                 type="text"
                 id="firstname"
                 name="firstname"
                 placeholder="First name"
+                disabled
               />
             </div>
             <div class="input-group">
               <label for="lastname">Last Name</label>
               <input
+                :value="indivInfo.user_lastname"
                 type="text"
                 id="lastname"
                 name="lastname"
                 placeholder="Last name"
+                disabled
               />
             </div>
             <div class="input-group">
               <label for="cin">ID</label>
               <input
+                :value="indivInfo.user_cin"
                 type="text"
                 id="cin"
                 name="cin"
                 placeholder="National ID card"
+                disabled
               />
             </div>
             <div class="input-group">
               <label for="birth">Date of Birth</label>
-              <input type="date" id="birth" name="birth" />
+              <input
+                :value="indivInfo.user_birth"
+                type="date"
+                id="birth"
+                name="birth"
+                disabled
+              />
             </div>
             <div class="input-group">
               <label for="phone">Phone Number</label>
               <input
+                :value="indivInfo.user_phone"
                 type="text"
                 id="phone"
                 name="phone"
                 placeholder="Phone number"
+                disabled
               />
             </div>
             <div class="input-group">
               <label for="email">Email</label>
               <input
+                :value="indivInfo.user_email"
                 type="email"
                 id="email"
                 name="email"
                 placeholder="type your email"
+                disabled
               />
             </div>
-            <div class="input-group">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="type your password"
-              />
-            </div>
-            <div class="input-group">
-              <label for="image" class="label-upload">image</label>
+
+            <div class="input-group image-input">
+              <label for="image" class="label-upload">{{
+                FileImageName
+              }}</label>
               <input
                 @change="displaImageName"
                 type="file"
@@ -82,21 +92,26 @@
                 accept="image/jpg,image/jpeg"
                 max-file-size="5000000"
                 class="custom-file-input"
+                disabled
               />
             </div>
           </div>
         </div>
         <div class="btns">
-          <button class="cancel-btn">edit</button>
-          <button class="continue-btn">Save Changes</button>
+          <button @click="edit" class="cancel-btn">edit</button>
+          <button @click="savechanges" class="continue-btn">
+            Save Changes
+          </button>
         </div>
       </div>
       <div class="card-section">
         <div class="profile-img">
           <img
             :src="
-              'http://localhost/Membership-Manager/Backend/public/storage/images/' +
               indivInfo.user_image
+                ? 'http://localhost/Membership-Manager/Backend/public/storage/images/' +
+                  indivInfo.user_image
+                : img
             "
           />
         </div>
@@ -115,13 +130,16 @@
 </template>
 
 <script>
+import img from "../../assets/img/img.jpg";
 import { createNamespacedHelpers } from "vuex";
 const { mapState, mapActions } = createNamespacedHelpers("individual");
 
 export default {
   data() {
     return {
-      image: "hello",
+      FileImageName: "Profile Image",
+      img,
+      arr: [],
     };
   },
   computed: {
@@ -130,7 +148,78 @@ export default {
       indivInfo: ({ indivInfo }) => indivInfo,
     }),
   },
-  method: {},
+  methods: {
+    ...mapActions(["individual/getUserInfo"]),
+    displaImageName(e) {
+      if (e.target.files[0]) {
+        this.FileImageName = e.target.files[0].name;
+        this.image = e.target.files[0];
+      } else {
+        this.FileImageName = "Profile Image";
+      }
+    },
+    edit() {
+      let firstname = document.getElementById("firstname");
+      let lastname = document.getElementById("lastname");
+      let cin = document.getElementById("cin");
+      let birth = document.getElementById("birth");
+      let phone = document.getElementById("phone");
+      let email = document.getElementById("email");
+      this.arr.push(firstname);
+      this.arr.push(lastname);
+      this.arr.push(cin);
+      this.arr.push(birth);
+      this.arr.push(phone);
+      this.arr.push(email);
+      this.arr.push(image);
+      this.arr.forEach((e) => {
+        e.disabled = false;
+        e.style.borderColor = "#9a6dd3";
+      });
+    },
+    async savechanges() {
+      if (this.arr.length > 0) {
+        this.arr.forEach((e) => {
+          e.disabled = true;
+          e.style.borderColor = "transparent";
+        });
+        let updateinfo = {
+          firstname: this.arr[0].value.trim(),
+          lastname: this.arr[1].value.trim(),
+          cin: this.arr[2].value.trim(),
+          birth: this.arr[3].value.trim(),
+          phone: this.arr[4].value.trim(),
+          email: this.arr[5].value.trim(),
+        };
+        console.log(updateinfo);
+
+        let formdata = new FormData();
+        if (this.arr[6].files[0]) {
+          formdata.append("image", this.arr[6].files[0]);
+          console.log(this.arr[6].files[0]);
+        }
+        let info = JSON.stringify(updateinfo);
+        formdata.append("request", info);
+        let result = await fetch(
+          "http://localhost/Membership-Manager/Backend/user/update",
+          {
+            method: "POST",
+            body: formdata,
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("indiv_token")}`,
+            },
+          }
+        );
+        let response = await result.json();
+        console.log(response);
+        if (response.updated == true) {
+          this.$store.dispatch("individual/getUserInfo");
+        } else {
+          this.$store.dispatch("individual/getUserInfo");
+        }
+      }
+    },
+  },
 };
 </script>
 
@@ -208,6 +297,7 @@ export default {
           align-items: center;
           gap: 10px;
           flex-wrap: wrap;
+
           .input-group {
             width: 40%;
             display: flex;
@@ -215,7 +305,7 @@ export default {
             label {
               font-family: poppins;
               font-weight: 400;
-              color: rgb(87, 87, 87);
+              color: rgb(61, 61, 61);
               margin-bottom: 5px;
             }
             input {
@@ -225,6 +315,7 @@ export default {
               background-color: white;
               padding-left: 20px;
               font-family: poppins;
+              color: rgb(87, 87, 87);
 
               &:focus {
                 outline: none;
@@ -248,6 +339,9 @@ export default {
 
               background-color: white;
             }
+          }
+          .image-input {
+            width: 80%;
           }
         }
       }
